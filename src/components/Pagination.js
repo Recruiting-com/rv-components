@@ -75,11 +75,11 @@ class Pagination extends React.Component {
           {page_options}
         </select>
         <div className="page-links">
-          <a className={`page-link page-link-first ${this.getSelectabilityClass(1)}`} onClick={this.changePage.bind(this, 1)}>first</a>
-          <a className={`page-link page-link-previous ${this.getSelectabilityClass(prev_page)}`} onClick={this.changePage.bind(this, prev_page)}>prev</a>
+          <a className={`page-link page-link-first ${this.getSelectabilityClass(1)}`} onClick={this.changePage.bind(this, 1) }>{this.props.firstLabel}</a>
+          <a className={`page-link page-link-previous ${this.getSelectabilityClass(prev_page)}`} onClick={this.changePage.bind(this, prev_page) }>{this.props.previousLabel}</a>
           {page_links}
-          <a className={`page-link page-link-next ${this.getSelectabilityClass(next_page)}`} onClick={this.changePage.bind(this, next_page)}>next</a>
-          <a className={`page-link page-link-last ${this.getSelectabilityClass(last_page)}`} onClick={this.changePage.bind(this, last_page)}>last</a>
+          <a className={`page-link page-link-next ${this.getSelectabilityClass(next_page)}`} onClick={this.changePage.bind(this, next_page) }>{this.props.nextLabel}</a>
+          <a className={`page-link page-link-last ${this.getSelectabilityClass(last_page)}`} onClick={this.changePage.bind(this, last_page) }>{this.props.lastLabel}</a>
         </div>
       </div>
     );
@@ -93,7 +93,11 @@ Pagination.propTypes = {
   total: React.PropTypes.number,
   onPageSizeChange: React.PropTypes.func,
   onPageChange: React.PropTypes.func,
-  numberOfPaginators: React.PropTypes.number
+  numberOfPaginators: React.PropTypes.number,
+  firstLabel: React.PropTypes.string,
+  previousLabel: React.PropTypes.string,
+  nextLabel: React.PropTypes.string,
+  lastLabel: React.PropTypes.string
 };
 
 Pagination.defaultProps = {
@@ -101,7 +105,11 @@ Pagination.defaultProps = {
   pageSizeOptions: [10, 25, 50, 100, 250],
   page: 1,
   total: 100,
-  numberOfPaginators: 10
+  numberOfPaginators: 10,
+  firstLabel: 'first',
+  previousLabel: 'prev',
+  nextLabel: 'next',
+  lastLabel: 'last'
 };
 
 export default Pagination;
