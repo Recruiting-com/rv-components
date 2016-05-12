@@ -26,7 +26,9 @@ class Pagination extends React.Component {
     this.props.onPageSizeChange && this.props.onPageSizeChange(new_page_size, new_page);
   }
 
-  changePage(page) {
+  changePage(page, event) {
+    event.preventDefault();
+
     if (page !== this.props.page && page > 0 && page <= this.calculateLastPage()) {
       this.props.onPageChange && this.props.onPageChange(page);
     }
@@ -58,7 +60,7 @@ class Pagination extends React.Component {
     const page_links = [];
 
     for (let page = start_page; page <= end_page; page++) {
-      page_links.push(<a className={`page-link ${page === this.props.page ? 'current-page' : ''} ${this.getSelectabilityClass(page)}`} key={page} onClick={this.changePage.bind(this, page)}>{page}</a>);
+      page_links.push(<a href={this.props.urlForPageNumber(page)} className={`page-link ${page === this.props.page ? 'current-page' : ''} ${this.getSelectabilityClass(page)}`} key={page} onClick={this.changePage.bind(this, page) }>{page}</a>);
     }
     return page_links;
   }
@@ -69,17 +71,19 @@ class Pagination extends React.Component {
     const last_page = this.calculateLastPage();
     const page_links = this.createPageLinks(last_page);
     const page_options = this.props.pageSizeOptions.map(value => <option key={value} value={value}>{value}</option>);
+    const urlForPageNumber = this.props.urlForPageNumber;
+
     return (
       <div className="pagination">
         <select className="page-size" defaultValue={this.props.pageSize} onChange={this.changePageSize}>
           {page_options}
         </select>
         <div className="page-links">
-          <a className={`page-link page-link-first ${this.getSelectabilityClass(1)}`} onClick={this.changePage.bind(this, 1) }>{this.props.firstLabel}</a>
-          <a className={`page-link page-link-previous ${this.getSelectabilityClass(prev_page)}`} onClick={this.changePage.bind(this, prev_page) }>{this.props.previousLabel}</a>
+          <a href={urlForPageNumber(1)} className={`page-link page-link-first ${this.getSelectabilityClass(1)}`} onClick={this.changePage.bind(this, 1) }>{this.props.firstLabel}</a>
+          <a href={urlForPageNumber(prev_page)} className={`page-link page-link-previous ${this.getSelectabilityClass(prev_page)}`} onClick={this.changePage.bind(this, prev_page) }>{this.props.previousLabel}</a>
           {page_links}
-          <a className={`page-link page-link-next ${this.getSelectabilityClass(next_page)}`} onClick={this.changePage.bind(this, next_page) }>{this.props.nextLabel}</a>
-          <a className={`page-link page-link-last ${this.getSelectabilityClass(last_page)}`} onClick={this.changePage.bind(this, last_page) }>{this.props.lastLabel}</a>
+          <a href={urlForPageNumber(next_page)} className={`page-link page-link-next ${this.getSelectabilityClass(next_page)}`} onClick={this.changePage.bind(this, next_page) }>{this.props.nextLabel}</a>
+          <a href={urlForPageNumber(last_page)} className={`page-link page-link-last ${this.getSelectabilityClass(last_page)}`} onClick={this.changePage.bind(this, last_page) }>{this.props.lastLabel}</a>
         </div>
       </div>
     );
@@ -97,7 +101,8 @@ Pagination.propTypes = {
   firstLabel: React.PropTypes.string,
   previousLabel: React.PropTypes.string,
   nextLabel: React.PropTypes.string,
-  lastLabel: React.PropTypes.string
+  lastLabel: React.PropTypes.string,
+  urlForPageNumber: React.PropTypes.func
 };
 
 Pagination.defaultProps = {
@@ -109,7 +114,8 @@ Pagination.defaultProps = {
   firstLabel: 'first',
   previousLabel: 'prev',
   nextLabel: 'next',
-  lastLabel: 'last'
+  lastLabel: 'last',
+  urlForPageNumber: () => '#'
 };
 
 export default Pagination;
