@@ -1,6 +1,6 @@
 {
   "name": "rv-components",
-  "version": "1.2.0",
+  "version": "1.2.1",
   "description": "A collection of reusable react components used by Recruiting Ventures.",
   "main": "lib/Components.js",
   "files": [
