@@ -67,8 +67,8 @@ class Pagination extends React.Component {
 
   render() {
     const prev_page = this.props.page - 1;
-    const next_page = this.props.page + 1;
     const last_page = this.calculateLastPage();
+    const next_page = this.props.page + 1 > last_page ? last_page : this.props.page + 1;
     const page_links = this.createPageLinks(last_page);
     const page_options = this.props.pageSizeOptions.map(value => <option key={value} value={value}>{value}</option>);
     const urlForPageNumber = this.props.urlForPageNumber;
