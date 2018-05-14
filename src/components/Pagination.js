@@ -5,14 +5,19 @@ class Pagination extends React.Component {
   constructor(props) {
     super(props);
     this.changePage = this.changePage.bind(this);
+    this.isSelectable = this.isSelectable.bind(this);
     this.changePageSize = this.changePageSize.bind(this);
     this.createPageLinks = this.createPageLinks.bind(this);
     this.getSelectabilityClass = this.getSelectabilityClass.bind(this);
     this.number_of_paginators = props.numberOfPaginators || 7;
   }
 
+  isSelectable(page) {
+    return Boolean(page < 1 || page > this.calculateLastPage() || page === this.props.page);
+  }
+
   getSelectabilityClass(page) {
-    if (page < 1 || page > this.calculateLastPage() || page === this.props.page) {
+    if (this.isSelectable(page)) {
       return 'not-selectable';
     } else {
       return 'selectable';
@@ -60,7 +65,7 @@ class Pagination extends React.Component {
     const page_links = [];
 
     for (let page = start_page; page <= end_page; page++) {
-      page_links.push(<a href={this.props.urlForPageNumber(page)} className={`page-link ${page === this.props.page ? 'current-page' : ''} ${this.getSelectabilityClass(page)}`} key={page} onClick={this.changePage.bind(this, page) }>{page}</a>);
+      page_links.push(<a href={this.props.urlForPageNumber(page)} className={`page-link ${page === this.props.page ? 'current-page' : ''} ${this.getSelectabilityClass(page)}`} key={page} onClick={this.changePage.bind(this, page)} aria-label={`Page ${page}`} aria-disabled={this.isSelectable(page)}>{page}</a>);
     }
     return page_links;
   }
@@ -75,15 +80,15 @@ class Pagination extends React.Component {
 
     return (
       <div className="pagination">
-        <select className="page-size" defaultValue={this.props.pageSize} onChange={this.changePageSize}>
+        <select className="page-size" defaultValue={this.props.pageSize} onChange={this.changePageSize} aria-label="Page Size">
           {page_options}
         </select>
         <div className="page-links">
-          <a href={urlForPageNumber(1)} className={`page-link page-link-first ${this.getSelectabilityClass(1)}`} onClick={this.changePage.bind(this, 1) }>{this.props.firstLabel}</a>
-          <a href={urlForPageNumber(prev_page)} className={`page-link page-link-previous ${this.getSelectabilityClass(prev_page)}`} onClick={this.changePage.bind(this, prev_page) }>{this.props.previousLabel}</a>
+          <a href={urlForPageNumber(1)} className={`page-link page-link-first ${this.getSelectabilityClass(1)}`} onClick={this.changePage.bind(this, 1) } aria-label="First page" aria-disabled={this.isSelectable(page)}>{this.props.firstLabel}</a>
+          <a href={urlForPageNumber(prev_page)} className={`page-link page-link-previous ${this.getSelectabilityClass(prev_page)}`} onClick={this.changePage.bind(this, prev_page) } aria-label="Back one page" aria-disabled={this.isSelectable(page)}>{this.props.previousLabel}</a>
           {page_links}
-          <a href={urlForPageNumber(next_page)} className={`page-link page-link-next ${this.getSelectabilityClass(next_page)}`} onClick={this.changePage.bind(this, next_page) }>{this.props.nextLabel}</a>
-          <a href={urlForPageNumber(last_page)} className={`page-link page-link-last ${this.getSelectabilityClass(last_page)}`} onClick={this.changePage.bind(this, last_page) }>{this.props.lastLabel}</a>
+          <a href={urlForPageNumber(next_page)} className={`page-link page-link-next ${this.getSelectabilityClass(next_page)}`} onClick={this.changePage.bind(this, next_page) } aria-label="Next Page" aria-disabled={this.isSelectable(page)}>{this.props.nextLabel}</a>
+          <a href={urlForPageNumber(last_page)} className={`page-link page-link-last ${this.getSelectabilityClass(last_page)}`} onClick={this.changePage.bind(this, last_page) } aria-label="Last page" aria-disabled={this.isSelectable(page)}>{this.props.lastLabel}</a>
         </div>
       </div>
     );
